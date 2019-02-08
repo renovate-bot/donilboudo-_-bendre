@@ -1,6 +1,7 @@
 package com.admedia.bendre.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -158,7 +159,9 @@ public class PostDetailsActivity extends AppCompatActivity {
     }
 
     public void subscription(View view) {
-        Intent intent = new Intent(getApplicationContext(), SubscriptionActivity.class);
+        String url = "https://www.bendre.bf/package-lecteur-abonne/";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
         startActivity(intent);
     }
 

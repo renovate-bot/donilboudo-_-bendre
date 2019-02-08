@@ -424,10 +424,10 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
         startActivity(intent);
     }
 
-    public void subscription(View view) {
-        Intent intent = new Intent(this, SubscriptionActivity.class);
-        startActivity(intent);
-    }
+//    public void subscription(View view) {
+//        Intent intent = new Intent(this, SubscriptionActivity.class);
+//        startActivity(intent);
+//    }
 
     @Override
     public void onBackPressed() {

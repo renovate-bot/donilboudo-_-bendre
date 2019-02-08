@@ -10,11 +10,11 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
+        android:id="@+id/header_subscription"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
         android:background="@color/yellow"
-        android:onClick="subscription"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -37,7 +37,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:text="pour accceder a l'ensemble des contenus"
                 android:textColor="@color/black"/>

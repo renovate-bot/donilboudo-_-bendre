@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.admedia.bendre.R;
@@ -139,6 +140,14 @@ public class MenuUtil {
             {
                 mLogoutButton.setVisibility(View.GONE);
             }
+
+            LinearLayout subscription = logoutHeader.findViewById(R.id.header_subscription);
+            subscription.setOnClickListener(v -> {
+                String url = "https://www.bendre.bf/package-lecteur-abonne/";
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+            });
         }
     }
 }
