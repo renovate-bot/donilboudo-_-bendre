@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.admedia.bendre.R;
+import com.admedia.bendre.activities.AboutActivity;
 import com.admedia.bendre.activities.ContactActivity;
 import com.admedia.bendre.activities.KiosqueActivity;
 import com.admedia.bendre.activities.LoginActivity;
@@ -24,6 +25,8 @@ import com.admedia.bendre.activities.WebTvActivity;
 import com.admedia.bendre.model.AppUser;
 
 import static com.admedia.bendre.activities.PostDetailsActivity.POST_TYPE;
+import static com.admedia.bendre.util.Constants.URL_CONTRIBUTE;
+import static com.admedia.bendre.util.Constants.URL_SUBSCRIPTION;
 import static com.admedia.bendre.util.Constants.USE_CACHE_DATA;
 
 public class MenuUtil {
@@ -70,9 +73,8 @@ public class MenuUtil {
                 break;
 
             case R.id.nav_contributeur:
-                String url = "https://www.bendre.bf/comment-contribuer/";
                 intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
+                intent.setData(Uri.parse(URL_CONTRIBUTE));
                 context.startActivity(intent);
                 break;
 
@@ -86,6 +88,10 @@ public class MenuUtil {
 
             case R.id.nav_settings:
                 context.startActivity(new Intent(context, SettingsActivity.class));
+                break;
+
+            case R.id.nav_about:
+                context.startActivity(new Intent(context, AboutActivity.class));
                 break;
         }
     }
@@ -143,9 +149,8 @@ public class MenuUtil {
 
             LinearLayout subscription = logoutHeader.findViewById(R.id.header_subscription);
             subscription.setOnClickListener(v -> {
-                String url = "https://www.bendre.bf/package-lecteur-abonne/";
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
+                intent.setData(Uri.parse(URL_SUBSCRIPTION));
                 activity.startActivity(intent);
             });
         }

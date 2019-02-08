@@ -10,4 +10,7 @@ public class Constants {
     public static final String RIGHT_TO_LEFT = "right-to-left";
 
     public static final String USE_CACHE_DATA = "USE_CACHE_DATA";
+
+    public static final String URL_CONTRIBUTE = "https://www.bendre.bf/comment-contribuer/";
+    public static final String URL_SUBSCRIPTION = "https://www.bendre.bf/package-lecteur-abonne/";
 }

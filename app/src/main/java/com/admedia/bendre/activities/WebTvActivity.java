@@ -11,13 +11,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.admedia.bendre.R;
 import com.admedia.bendre.adapters.ViewPagerAdapter;
 import com.admedia.bendre.fragments.ChannelFragment;
 import com.admedia.bendre.fragments.VideoFragment;
-import com.admedia.bendre.fragments.dummy.DummyContent;
 import com.admedia.bendre.model.Video;
 import com.admedia.bendre.util.MenuUtil;
 
@@ -88,5 +88,16 @@ public class WebTvActivity extends AppCompatActivity implements
     @Override
     public void onListFragmentInteraction(Video item) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            finishAffinity();
+            System.exit(0);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

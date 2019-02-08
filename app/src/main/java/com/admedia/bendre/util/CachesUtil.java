@@ -46,4 +46,8 @@ public class CachesUtil {
         ObjectInputStream ois = new ObjectInputStream(fis);
         return ois.readObject();
     }
+
+    public void removeCache(Context context, String key) {
+        context.deleteFile(key);
+    }
 }

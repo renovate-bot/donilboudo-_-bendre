@@ -137,7 +137,7 @@
     <string name="search_hint">Recherche</string>
     <string name="title_activity_user_menu">UserMenuActivity</string>
     <string name="title_activity_new_post">Rédiger un article</string>
-    <string name="no_internet_connexion">Pas de connexion a internet</string>
+    <string name="no_internet_connexion">Pas de connexion à internet</string>
     <string name="subscription">S\'abonner</string>
     <string name="post_comments">Commentaires</string>
     <string name="information_de_facturation">Information de facturation</string>
@@ -212,4 +212,8 @@
     <string name="votre_commande">Votre commande</string>
     <string name="acheter">Acheter</string>
     <string name="cannot_fetch_data">Nous éprouvons un problème technique. Veuillez réessayer plus tard</string>
+    <string name="menu_about">A propos</string>
+    <string name="title_activity_about">A propos</string>
+    <string name="copyright_bendre">Copyright © Bendré</string>
+    <string name="design_by_admedia_technologies">Design by AdMedia Technologies</string>
 </resources>

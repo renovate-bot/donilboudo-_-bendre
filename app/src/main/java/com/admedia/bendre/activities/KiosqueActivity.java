@@ -12,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -27,6 +28,7 @@ import com.admedia.bendre.util.CachesUtil;
 import com.admedia.bendre.util.EndpointConstants;
 import com.admedia.bendre.util.MenuUtil;
 import com.admedia.bendre.util.MessageUtil;
+import com.admedia.bendre.util.NetworkUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -126,7 +128,15 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
     }
 
     private void fetchDataFromRemote() {
-        new Thread(new ProductsRunnable()).start();
+        if (NetworkUtil.isOnline(this))
+        {
+            new Thread(new ProductsRunnable()).start();
+        }
+        else
+        {
+            MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.no_internet_connexion));
+            fetchDataFromCache();
+        }
     }
 
     @Override
@@ -177,7 +187,7 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
             }
 
             rvProducts.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-            rvProducts.setAdapter(new ProductsViewAdapter(getApplicationContext(), products, v -> {
+            rvProducts.setAdapter(new ProductsViewAdapter(this, products, v -> {
 
             }));
         }
@@ -199,6 +209,17 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
         }
 
         showProgress(false);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            finishAffinity();
+            System.exit(0);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

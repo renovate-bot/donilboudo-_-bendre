@@ -89,14 +89,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
         mLayoutUsername = findViewById(R.id.layout_username);
         mLayoutPassword = findViewById(R.id.layout_password);
-//        mPassword.setOnEditorActionListener((textView, id, keyEvent) -> {
-//            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL)
-//            {
-//                attemptLogin();
-//                return true;
-//            }
-//            return false;
-//        });
 
         Button mLoginButton = findViewById(R.id.login_button);
         mLoginButton.setOnClickListener(view -> {
@@ -111,16 +103,15 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private void attemptLogin() {
         String username = mUsername.getText().toString();
         String password = mPassword.getText().toString();
-//        startActivity(new Intent(getApplicationContext(), MyMenuActivity.class));
 
-        showProgress(true);
         if (NetworkUtil.isOnline(this))
         {
+            showProgress(true);
             login(username, password);
         }
         else
         {
-            MessageUtil.getInstance().ToastMessage(getApplicationContext(), String.valueOf(R.string.no_internet_connexion));
+            MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.no_internet_connexion));
         }
     }
 

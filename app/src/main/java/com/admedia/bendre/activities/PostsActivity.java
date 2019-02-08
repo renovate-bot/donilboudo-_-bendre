@@ -85,22 +85,7 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-
-        if (NetworkUtil.isOnline(this))
-        {
-            if (showMyPosts)
-            {
-                fetchMyPosts(true, 1);
-            }
-            else
-            {
-                fetchPosts(true, 1);
-            }
-        }
-        else
-        {
-            MessageUtil.getInstance().ToastMessage(getApplicationContext(), String.valueOf(R.string.no_internet_connexion));
-        }
+        fetchData();
     }
 
     private void init() {
@@ -136,23 +121,31 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
 
         rvPosts = findViewById(R.id.posts);
 
+        mProgressBar = findViewById(R.id.progressbar);
+
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(
                 () -> {
                     currentPageNumber = 1;
                     useCacheData = false;
-                    fetchPosts(false, 1);
+                    fetchPosts(1);
                 }
         );
     }
 
-    private void fetchPosts(boolean useProgressDialog, int pageNumber) {
-        String categoriesString = postType != null ? CategoriesUtil.getInstance().getCategoriesString(getApplicationContext(), postType) : "";
-
-        if (useProgressDialog)
+    private void fetchData() {
+        if (showMyPosts)
         {
-            mProgressBar = findViewById(R.id.progressbar);
+            fetchMyPosts(true, 1);
         }
+        else
+        {
+            fetchPosts(1);
+        }
+    }
+
+    private void fetchPosts(int pageNumber) {
+        String categoriesString = postType != null ? CategoriesUtil.getInstance().getCategoriesString(getApplicationContext(), postType) : "";
 
         if (!useCacheData)
         {
@@ -165,13 +158,21 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
     }
 
     private void fetchDataFromRemote(String categoriesString, int pageNumber) {
-        new Thread(new PostsRunnable(categoriesString)).start();
+        if (NetworkUtil.isOnline(this))
+        {
+            new Thread(new PostsRunnable(categoriesString)).start();
+        }
+        else
+        {
+            MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.no_internet_connexion));
+            fetchDataFromCache(categoriesString, pageNumber);
+        }
     }
 
     private void fetchDataFromCache(String categoriesString, int pageNumber) {
         try
         {
-            Object data = CachesUtil.getInstance().readCachedFile(getApplicationContext(), "posts");
+            Object data = CachesUtil.getInstance().readCachedFile(getApplicationContext(), "posts-" + postType);
             List array = Collections.singletonList(data);
             posts = (List<Post>) array.get(0);
             fillData(posts);
@@ -179,12 +180,28 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
         catch (IOException e)
         {
             e.printStackTrace();
-            fetchDataFromRemote(categoriesString, pageNumber);
+            if (NetworkUtil.isOnline(this))
+            {
+                fetchDataFromRemote(categoriesString, pageNumber);
+            }
+            else
+            {
+                posts = new ArrayList<>();
+                showProgress(false);
+            }
         }
         catch (ClassNotFoundException e)
         {
             e.printStackTrace();
-            fetchDataFromRemote(categoriesString, pageNumber);
+            if (NetworkUtil.isOnline(this))
+            {
+                fetchDataFromRemote(categoriesString, pageNumber);
+            }
+            else
+            {
+                posts = new ArrayList<>();
+                showProgress(false);
+            }
         }
     }
 
@@ -197,7 +214,9 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
 
         try
         {
-            CachesUtil.getInstance().createCachedFileForPosts(getApplicationContext(), "posts", posts);
+            String key = "posts-" + postType;
+            CachesUtil.getInstance().removeCache(getApplicationContext(), key);
+            CachesUtil.getInstance().createCachedFileForPosts(getApplicationContext(), key, posts);
         }
         catch (IOException e)
         {
@@ -221,7 +240,7 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
                         {
                             currentPageNumber++;
                             loadMore = true;
-                            fetchPosts(false, currentPageNumber);
+                            fetchPosts(currentPageNumber);
                         }
                     }
                 }
@@ -424,11 +443,6 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
         startActivity(intent);
     }
 
-//    public void subscription(View view) {
-//        Intent intent = new Intent(this, SubscriptionActivity.class);
-//        startActivity(intent);
-//    }
-
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
@@ -440,8 +454,8 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK)
         {
-            onBackPressed();
-            finish();
+            finishAffinity();
+            System.exit(0);
             return true;
         }
         return super.onKeyDown(keyCode, event);

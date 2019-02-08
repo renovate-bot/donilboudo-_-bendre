@@ -10,7 +10,6 @@ import android.widget.VideoView;
 
 import com.admedia.bendre.R;
 import com.admedia.bendre.fragments.VideoFragment.OnListFragmentInteractionListener;
-import com.admedia.bendre.fragments.dummy.DummyContent.DummyItem;
 import com.admedia.bendre.model.Video;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecy
     private final List<Video> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyVideoRecyclerViewAdapter(List<Video> items, OnListFragmentInteractionListener listener) {
+    MyVideoRecyclerViewAdapter(List<Video> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -41,15 +40,12 @@ public class MyVideoRecyclerViewAdapter extends RecyclerView.Adapter<MyVideoRecy
         holder.mPlayer.setVideoPath(path);
 //        holder.mContentView.setText(mValues.get(position).content);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener)
-                {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+        holder.mView.setOnClickListener(v -> {
+            if (null != mListener)
+            {
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                mListener.onListFragmentInteraction(holder.mItem);
             }
         });
     }

@@ -1,6 +1,6 @@
 package com.admedia.bendre.adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -14,23 +14,25 @@ import android.widget.TextView;
 import com.admedia.bendre.R;
 import com.admedia.bendre.activities.PaymentActivity;
 import com.admedia.bendre.model.woocommerce.Product;
+import com.admedia.bendre.util.MessageUtil;
+import com.admedia.bendre.util.NetworkUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ProductsViewAdapter extends RecyclerView.Adapter<ProductsViewAdapter.ViewHolder> {
     private final List<Product> mValues;
-    private final Context context;
+    private final Activity activity;
     private final View.OnClickListener mListener;
 
     public interface OnItemClickListener {
         void onItemClick(Product product);
     }
 
-    public ProductsViewAdapter(Context context, List<Product> items, View.OnClickListener listener) {
+    public ProductsViewAdapter(Activity activity, List<Product> items, View.OnClickListener listener) {
         this.mValues = items;
         this.mListener = listener;
-        this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -44,7 +46,7 @@ public class ProductsViewAdapter extends RecyclerView.Adapter<ProductsViewAdapte
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTitle.setText(mValues.get(position).getName());
-        String price = holder.mItem.getRegularPrice() + " " + context.getString(R.string.fcfa);
+        String price = holder.mItem.getRegularPrice() + " " + activity.getString(R.string.fcfa);
         holder.mPrice.setText(price);
 
         if (mValues.get(position).getImages() != null)
@@ -56,9 +58,16 @@ public class ProductsViewAdapter extends RecyclerView.Adapter<ProductsViewAdapte
         }
 
         holder.btnBuy.setOnClickListener(v -> {
-            Intent intent =new Intent(context.getApplicationContext(), PaymentActivity.class);
-            intent.putExtra("SELECTED_PRODUCT", holder.mItem);
-            context.startActivity(intent);
+            if (NetworkUtil.isOnline(activity))
+            {
+                Intent intent = new Intent(activity.getApplicationContext(), PaymentActivity.class);
+                intent.putExtra("SELECTED_PRODUCT", holder.mItem);
+                activity.startActivity(intent);
+            }
+            else
+            {
+                MessageUtil.getInstance().ToastMessage(activity.getApplicationContext(), activity.getString(R.string.no_internet_connexion));
+            }
         });
     }
 

@@ -24,6 +24,8 @@ import com.admedia.bendre.util.AuthenticationHelper;
 import com.admedia.bendre.util.CategoriesUtil;
 import com.squareup.picasso.Picasso;
 
+import static com.admedia.bendre.util.Constants.URL_SUBSCRIPTION;
+
 public class PostDetailsActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getName();
     public static final String SELECTED_POST = "SELECTED_POST";
@@ -159,9 +161,8 @@ public class PostDetailsActivity extends AppCompatActivity {
     }
 
     public void subscription(View view) {
-        String url = "https://www.bendre.bf/package-lecteur-abonne/";
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
+        intent.setData(Uri.parse(URL_SUBSCRIPTION));
         startActivity(intent);
     }
 
