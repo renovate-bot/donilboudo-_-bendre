@@ -1,0 +1,215 @@
+<resources>
+    <string name="app_name">Bendré</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="large_text">
+        "Material is the metaphor.\n\n"
+
+        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
+        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+        "technologically advanced and open to imagination and magic.\n"
+        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
+        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
+        "flexibility of the material creates new affordances that supercede those in the physical "
+        "world, without breaking the rules of physics.\n"
+        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
+        "interact, and exist in space and in relation to each other. Realistic lighting shows "
+        "seams, divides space, and indicates moving parts.\n\n"
+
+        "Bold, graphic, intentional.\n\n"
+
+        "The foundational elements of print based design typography, grids, space, scale, color, "
+        "and use of imagery guide visual treatments. These elements do far more than please the "
+        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
+        "imagery, large scale typography, and intentional white space create a bold and graphic "
+        "interface that immerse the user in the experience.\n"
+        "An emphasis on user actions makes core functionality immediately apparent and provides "
+        "waypoints for the user.\n\n"
+
+        "Motion provides meaning.\n\n"
+
+        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
+        "inflection points that initiate motion, transforming the whole design.\n"
+        "All action takes place in a single environment. Objects are presented to the user without "
+        "breaking the continuity of experience even as they transform and reorganize.\n"
+        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
+        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
+
+        "3D world.\n\n"
+
+        "The material environment is a 3D space, which means all objects have x, y, and z "
+        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
+        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
+        "position along the z-axis and has a standard 1dp thickness.\n"
+        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
+        "emulated by manipulating the y-axis.\n\n"
+
+        "Light and shadow.\n\n"
+
+        "Within the material environment, virtual lights illuminate the scene. Key lights create "
+        "directional shadows, while ambient light creates soft shadows from all angles.\n"
+        "Shadows in the material environment are cast by these two light sources. In Android "
+        "development, shadows occur when light sources are blocked by sheets of material at "
+        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
+        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
+
+        "Resting elevation.\n\n"
+
+        "All material objects, regardless of size, have a resting elevation, or default elevation "
+        "that does not change. If an object changes elevation, it should return to its resting "
+        "elevation as soon as possible.\n\n"
+
+        "Component elevations.\n\n"
+
+        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
+        "does not vary from 6dp in one app to 16dp in another app).\n"
+        "Components may have different resting elevations across platforms, depending on the depth "
+        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
+
+        "Responsive elevation and dynamic elevation offsets.\n\n"
+
+        "Some component types have responsive elevation, meaning they change elevation in response "
+        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
+        "changes are consistently implemented using dynamic elevation offsets.\n"
+        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
+        "to the component’s resting state. They ensure that elevation changes are consistent "
+        "across actions and component types. For example, all components that lift on press have "
+        "the same elevation change relative to their resting elevation.\n"
+        "Once the input event is completed or cancelled, the component will return to its resting "
+        "elevation.\n\n"
+
+        "Avoiding elevation interference.\n\n"
+
+        "Components with responsive elevations may encounter other components as they move between "
+        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
+        "through other material, components avoid interfering with one another any number of ways, "
+        "whether on a per component basis or using the entire app layout.\n"
+        "On a component level, components can move or be removed before they cause interference. "
+        "For example, a floating action button (FAB) can disappear or move off screen before a "
+        "user picks up a card, or it can move if a snackbar appears.\n"
+        "On the layout level, design your app layout to minimize opportunities for interference. "
+        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
+        "when a user tries to pick up one of cards.\n\n"
+    </string>
+
+    <string name="menu_a_la_une">A la une</string>
+    <string name="menu_help">Aide</string>
+    <string name="menu_parameters">Paramètres</string>
+    <string name="menu_title_your_application">VOTRE APPLICATION</string>
+    <string name="menu_title_topics">RUBRIQUES</string>
+    <string name="title_menu">Bendre</string>
+    <string name="title_activity_posts">Articles</string>
+    <string name="menu_bendrekan">Bendrekan</string>
+    <string name="menu_burkina">Burkina</string>
+    <string name="menu_international">International</string>
+    <string name="menu_opportunite">Opportunité</string>
+    <string name="menu_labo">Labo</string>
+    <string name="menu_contributeur">Contributeur</string>
+    <string name="menu_webtv">Web TV</string>
+    <string name="menu_contact">Contacts</string>
+
+    <string name="title_activity_list">ListActivity</string>
+    <string name="splash_screen_logo">Logo</string>
+    <string name="title_activity_tab">TabActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_post">PostActivity</string>
+    <string name="title_activity_login">Connexion</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Nom d\'utilisateur</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Connexion</string>
+    <string name="action_update">Mettre à jour</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_username">Ce nom d\'utilisateur est invalide</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">Votre mot de passe est incorrecte</string>
+    <string name="error_field_required">Ce champ est obligatoire</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="title_activity_subscription">Souscription</string>
+    <string name="app_label">Bendre</string>
+    <string name="search_hint">Recherche</string>
+    <string name="title_activity_user_menu">UserMenuActivity</string>
+    <string name="title_activity_new_post">Rédiger un article</string>
+    <string name="no_internet_connexion">Pas de connexion a internet</string>
+    <string name="subscription">S\'abonner</string>
+    <string name="post_comments">Commentaires</string>
+    <string name="information_de_facturation">Information de facturation</string>
+    <string name="prenom">Prénom</string>
+    <string name="nom">Nom</string>
+    <string name="adresse_1">Adresse 1</string>
+    <string name="adresse_2">Adresse 2</string>
+    <string name="ville">Ville</string>
+    <string name="pays">Pays</string>
+    <string name="telephone">Téléphone</string>
+    <string name="confirmez_email">Confirmez l\'email</string>
+    <string name="adresse_email">Adresse email</string>
+    <string name="confirmer_mot_de_passe">Confirmer le mot de passe</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="nom_utilisateur">Nom d\'utilisateur</string>
+    <string name="information_du_compte">Information du compte</string>
+    <string name="type_abonnement">Type d\'abonnement: <b>Lecteur Abonné</b></string>
+    <string name="choisissez_type_abonnement">Choisissez votre type d\'abonnement</string>
+    <string name="annuler">Annuler</string>
+    <string name="soumettre">Soumettre</string>
+    <string name="deconnexion">Déconnexion</string>
+    <string name="se_connecter">SE CONNECTER</string>
+    <string name="mes_articles">Mes articles</string>
+    <string name="rediger_un_article">Rediger un article</string>
+    <string name="title_activity_kiosque">KiosqueActivity</string>
+    <string name="description">description</string>
+    <string name="working_progress">En construction</string>
+    <string name="search">Recherche</string>
+    <string name="comments">Commentaires</string>
+    <string name="share">Partage</string>
+
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="title_activity_contact">Contacts</string>
+    <string name="title_activity_contributor">Contributeur</string>
+    <string name="title_activity_web_tv">Web Tv</string>
+
+    <string name="address">16.38 Avenue du Naaba Ambga \n 11 BP 1256 CSM Ouagadougou 11. \n Burkina Faso</string>
+    <string name="mail">info@bendre.bf</string>
+    <string name="phone">+226 25332711 / 78404978</string>
+
+    <string name="no_news">Cette section ne comporte pas d\'abord d\'article(s)</string>
+    <string name="title_activity_post_details">PostDetailsActivity</string>
+    <string name="fcm_message">FCM Message</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <string name="votre_nom_d_utilisateur_mot_de_passe_est_incorrecte">Votre nom d\'utilisateur/mot de passe est incorrecte</string>
+    <string name="my_menu">Mon menu</string>
+    <string name="title_activity_user_profile">Mon profile</string>
+    <string name="prompt_firstname">Prénom</string>
+    <string name="prompt_lastname">Nom</string>
+    <string name="title_activity_my_menu">Mon menu</string>
+    <string name="title_activity_comments">Commentaires</string>
+    <string name="no_created_articles">Vous n\'avez pas encore d\'article</string>
+    <string name="no_comments">Aucun commentaire(s) pour cet article</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="my_profile">Mon profile</string>
+    <string name="fcfa">FCFA</string>
+    <string name="settings">Paramètres</string>
+    <string name="notifications">Notifications</string>
+    <string name="title_activity_payment">Paiement</string>
+    <string name="prompt_country">Pays</string>
+    <string name="prompt_address">Numéro et nom de rue</string>
+    <string name="prompt_city">Ville</string>
+    <string name="prompt_province">Province</string>
+    <string name="prompt_postal_code">Code postal</string>
+    <string name="prompt_phone">Téléphone</string>
+    <string name="prompt_mail">Adresse de messagerie</string>
+    <string name="d_tails_de_facturation">Détails de facturation</string>
+    <string name="montant_payer">Montant à payer:</string>
+    <string name="produit">Produit:</string>
+    <string name="votre_commande">Votre commande</string>
+    <string name="acheter">Acheter</string>
+    <string name="cannot_fetch_data">Nous éprouvons un problème technique. Veuillez réessayer plus tard</string>
+</resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view"
+    >
+
+    <item
+        android:id="@+id/nav_a_la_une"
+        android:icon="@drawable/ic_flash_news"
+        android:title="@string/menu_a_la_une"
+        />
+
+    <item
+        android:icon="@drawable/ic_menu_slideshow"
+        android:title="@string/menu_title_topics"
+        >
+        <menu>
+            <item
+                android:id="@+id/nav_bendrekan"
+                android:icon="@drawable/ic_news"
+                android:title="@string/menu_bendrekan"/>
+            <item
+                android:id="@+id/nav_burkina"
+                android:icon="@drawable/ic_country"
+                android:title="@string/menu_burkina"/>
+            <item
+                android:id="@+id/nav_international"
+                android:icon="@drawable/ic_world"
+                android:title="@string/menu_international"/>
+            <item
+                android:id="@+id/nav_opportunite"
+                android:icon="@drawable/ic_opportunity"
+                android:title="@string/menu_opportunite"/>
+            <item
+                android:id="@+id/nav_labo"
+                android:icon="@drawable/ic_labo"
+                android:title="@string/menu_labo"/>
+            <item
+                android:id="@+id/nav_contributeur"
+                android:icon="@drawable/ic_contributor"
+                android:title="@string/menu_contributeur"/>
+            <item
+                android:id="@+id/nav_webtv"
+                android:icon="@drawable/ic_tv"
+                android:title="@string/menu_webtv"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/menu_title_your_application">
+        <menu>
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@drawable/ic_contact"
+                android:title="@string/menu_contact"/>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_params"
+                android:title="@string/menu_parameters"/>
+
+            <item android:title=""/>
+        </menu>
+    </item>
+
+</menu>

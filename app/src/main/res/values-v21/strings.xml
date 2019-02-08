@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<string name="menu_economie">Economie</string>-->
+    <!--<string name="menu_edito">Edito</string>-->
+    <!--<string name="menu_point_barre">Point barre</string>-->
+    <!--<string name="menu_bendremetrie">Bendremetrie</string>-->
+    <!--<string name="menu_bendrescopie">Bendrescopie</string>-->
+    <!--<string name="menu_actu_express">Actu Express</string>-->
+    <!--<string name="menu_politique">Politique</string>-->
+    <!--<string name="menu_societe">Société</string>-->
+    <!--<string name="menu_culture">Culture</string>-->
+    <string name="menu_a_la_une">A la une</string>
+    <string name="menu_help">Aide</string>
+    <string name="menu_parameters">Paramètres</string>
+    <string name="menu_title_your_application">VOTRE APPLICATION</string>
+    <string name="menu_title_topics">RUBRIQUES</string>
+    <string name="title_menu">Bendre</string>
+    <string name="title_activity_posts">Articles</string>
+    <string name="menu_bendrekan">Bendrekan</string>
+    <string name="menu_burkina">Burkina</string>
+    <string name="menu_international">International</string>
+    <string name="menu_opportunite">Opportunite</string>
+    <string name="menu_labo">Labo</string>
+    <string name="menu_contributeur">Contributeur</string>
+    <string name="menu_webtv">Web TV</string>
+    <string name="menu_contact">Contacts</string>
+
+    <!--Messages-->
+    <string name="message_cannot_read">Vous devez vous abonner pour pouvoir lire</string>
+
+</resources>

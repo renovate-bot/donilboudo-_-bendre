@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "413849263758",
+    "firebase_url": "https://bendre-a071f.firebaseio.com",
+    "project_id": "bendre-a071f",
+    "storage_bucket": "bendre-a071f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413849263758:android:139ed9f423aac897",
+        "android_client_info": {
+          "package_name": "com.admedia.bendre"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413849263758-mdej7ol51fftt8aoao756kssg57vk1ic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoWSEl3r0rLzkEPAHfMBoL0OcXQ4YEz0Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
