@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 public class CategoriesUtil {
-    public Map<Integer, String> categories;
-    public static CategoriesUtil instance = null;
+    private Map<Integer, String> categories;
+    private static CategoriesUtil instance = null;
     public static final String POST_TYPE = "postType";
 
-    public CategoriesUtil() {
+    private CategoriesUtil() {
         categories = new HashMap<>();
         loadData();
     }
@@ -52,6 +52,20 @@ public class CategoriesUtil {
         categories.put(9, "Ils ont dit");
         categories.put(10, "Feu vert");
         categories.put(11, "A bout portant");
+        categories.put(108, "A la une");
+        categories.put(276, "Focus");
+    }
+
+    public String getCategoryString(Long category) {
+        String categoryString = "";
+        for (int item : categories.keySet())
+        {
+            if (item == category)
+            {
+                categoryString = categories.get(item);
+            }
+        }
+        return categoryString;
     }
 
     public String getCategoriesString(List<Long> postCategories) {
@@ -92,7 +106,8 @@ public class CategoriesUtil {
         }
         else
         {
-            categoriesString = "14+29+30";
+//            categoriesString = "14+29+30";
+            categoriesString = "108";
         }
 
         return categoriesString;

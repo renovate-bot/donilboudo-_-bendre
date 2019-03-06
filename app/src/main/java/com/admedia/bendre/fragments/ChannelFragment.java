@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,11 +53,18 @@ public class ChannelFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
+
+        Bundle bundle = new Bundle();
+        bundle.putString("VIDEO_ID", "wN1kFRh2PFo");
+        YoutubeFragment fragment = new YoutubeFragment();
+        fragment.setArguments(bundle);
+        if (getFragmentManager() != null)
         {
-            // TODO: Rename and change types of parameters
-            String mParam1 = getArguments().getString(ARG_PARAM1);
-            String mParam2 = getArguments().getString(ARG_PARAM2);
+            FragmentManager manager = getFragmentManager();
+            manager.beginTransaction()
+                    .replace(R.id.youtube_player, fragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 

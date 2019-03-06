@@ -102,7 +102,7 @@
     <string name="menu_parameters">Paramètres</string>
     <string name="menu_title_your_application">VOTRE APPLICATION</string>
     <string name="menu_title_topics">RUBRIQUES</string>
-    <string name="title_menu">Bendre</string>
+    <string name="title_menu">Bendré</string>
     <string name="title_activity_posts">Articles</string>
     <string name="menu_bendrekan">Bendrekan</string>
     <string name="menu_burkina">Burkina</string>
@@ -133,7 +133,7 @@
     <string name="error_field_required">Ce champ est obligatoire</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="title_activity_subscription">Souscription</string>
-    <string name="app_label">Bendre</string>
+    <string name="app_label">Bendré</string>
     <string name="search_hint">Recherche</string>
     <string name="title_activity_user_menu">UserMenuActivity</string>
     <string name="title_activity_new_post">Rédiger un article</string>
@@ -161,7 +161,7 @@
     <string name="deconnexion">Déconnexion</string>
     <string name="se_connecter">SE CONNECTER</string>
     <string name="mes_articles">Mes articles</string>
-    <string name="rediger_un_article">Rediger un article</string>
+    <string name="rediger_un_article">Rédiger un article</string>
     <string name="title_activity_kiosque">KiosqueActivity</string>
     <string name="description">description</string>
     <string name="working_progress">En construction</string>
@@ -177,8 +177,10 @@
     <string name="address">16.38 Avenue du Naaba Ambga \n 11 BP 1256 CSM Ouagadougou 11. \n Burkina Faso</string>
     <string name="mail">info@bendre.bf</string>
     <string name="phone">+226 25332711 / 78404978</string>
+    <string name="website">www.bendre.bf</string>
 
     <string name="no_news">Cette section ne comporte pas d\'abord d\'article(s)</string>
+    <string name="no_news_bendrekan">Aucun journal disponible</string>
     <string name="title_activity_post_details">PostDetailsActivity</string>
     <string name="fcm_message">FCM Message</string>
     <string name="default_notification_channel_id">fcm_default_channel</string>
@@ -216,4 +218,30 @@
     <string name="title_activity_about">A propos</string>
     <string name="copyright_bendre">Copyright © Bendré</string>
     <string name="design_by_admedia_technologies">Design by AdMedia Technologies</string>
+    <string name="title_activity_registration">Création de compte</string>
+    <string name="action_sign_up">Créer</string>
+    <string name="bendrekan">BENDREKAN</string>
+    <string name="my_membership">Mon abonnement</string>
+    <string name="title_activity_my_articles">Mes Articles</string>
+    <string name="titre_de_l_article">Titre de l\'article</string>
+    <string name="requiered_field">Ce champs est obligatoire</string>
+    <string name="delete">Supprimer</string>
+    <string name="edit">Modifier</string>
+    <string name="required_new_post_content">Le contenu de l\'article ne doit pas être vide</string>
+    <string name="lbl_update">Mettre à jour</string>
+    <string name="lbl_new_post">Nouvel article</string>
+    <string name="successful_save_post">Votre article à été bien enregistré</string>
+    <string name="lbl_press_back_to_exit">Presser une autre fois pour quitter l\'application</string>
+    <string name="lbl_welcome">Bienvenue!</string>
+    <string name="btn_order">Commander</string>
+    <string name="lbl_payment_options">Mode de payment</string>
+    <string name="lbl_select_payment_error">Veuillez choisir un mode de paiement</string>
+    <string name="lbl_published_date">Publié le</string>
+    <string name="save">Enregistrer</string>
+
+    <string-array name="payment_options_array">
+        <item>Sélectionner un mode de paiement</item>
+        <item>AdMedia OrangeMoney</item>
+        <item>PayPal</item>
+    </string-array>
 </resources>

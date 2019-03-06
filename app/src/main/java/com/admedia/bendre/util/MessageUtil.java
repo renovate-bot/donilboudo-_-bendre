@@ -16,7 +16,7 @@ import com.admedia.bendre.R;
  */
 
 public class MessageUtil {
-    public static MessageUtil instance = null;
+    private static MessageUtil instance = null;
 
     private MessageUtil() {
     }

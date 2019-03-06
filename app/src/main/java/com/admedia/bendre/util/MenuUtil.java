@@ -147,7 +147,7 @@ public class MenuUtil {
                 mLogoutButton.setVisibility(View.GONE);
             }
 
-            LinearLayout subscription = logoutHeader.findViewById(R.id.header_subscription);
+            Button subscription = logoutHeader.findViewById(R.id.header_btn_subscription);
             subscription.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(URL_SUBSCRIPTION));

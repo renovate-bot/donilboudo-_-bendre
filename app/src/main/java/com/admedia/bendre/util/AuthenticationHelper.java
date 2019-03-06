@@ -6,7 +6,7 @@ import com.admedia.bendre.database.DBManager;
 import com.admedia.bendre.model.AppUser;
 
 public class AuthenticationHelper {
-    public static AuthenticationHelper instance = null;
+    private static AuthenticationHelper instance = null;
     private AppUser connectedUser;
 
     private AuthenticationHelper() {
@@ -52,5 +52,12 @@ public class AuthenticationHelper {
         dbManager.deleteUser(id);
         dbManager.close();
         this.connectedUser = null;
+    }
+
+    public void updateUserInfo(Context context, AppUser user) {
+        DBManager dbManager = new DBManager(context);
+        dbManager.open();
+        dbManager.updateUserInfo(user);
+        dbManager.close();
     }
 }

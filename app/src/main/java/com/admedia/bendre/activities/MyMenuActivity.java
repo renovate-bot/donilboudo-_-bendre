@@ -9,15 +9,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.admedia.bendre.R;
 import com.admedia.bendre.util.AuthenticationHelper;
+import com.admedia.bendre.util.CategoriesUtil;
 import com.admedia.bendre.util.MenuUtil;
 
-import static com.admedia.bendre.activities.PostsActivity.SHOW_ONLY_MY_POSTS;
+import static com.admedia.bendre.util.Constants.USE_CACHE_DATA;
 
 public class MyMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -71,9 +73,20 @@ public class MyMenuActivity extends AppCompatActivity implements NavigationView.
     }
 
     public void myPosts(View view) {
-        Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
-        intent.putExtra(SHOW_ONLY_MY_POSTS, true);
+        Intent intent = new Intent(getApplicationContext(), MyPostsActivity.class);
+        intent.putExtra(USE_CACHE_DATA, false);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            finishAffinity();
+            System.exit(0);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public void myProfile(View view) {

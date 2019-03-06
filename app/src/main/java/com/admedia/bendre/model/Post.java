@@ -95,11 +95,11 @@ public class Post implements Serializable {
     @JsonProperty("_embedded")
     private Embedded embedded;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
     @JsonIgnore
     private String mediaLink;
     @JsonIgnore
-    private String author_name;
+    private String authorName;
     private String postType;
 
     public Post() {
@@ -416,12 +416,12 @@ public class Post implements Serializable {
         return mediaLink;
     }
 
-    public String getAuthor_name() {
-        return author_name;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setAuthor_name(String author_name) {
-        this.author_name = author_name;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public String getPostType() {

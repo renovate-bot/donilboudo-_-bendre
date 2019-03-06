@@ -13,4 +13,7 @@ public class Constants {
 
     public static final String URL_CONTRIBUTE = "https://www.bendre.bf/comment-contribuer/";
     public static final String URL_SUBSCRIPTION = "https://www.bendre.bf/package-lecteur-abonne/";
+
+    public static final String YOUTUBE_API_KEY = "AIzaSyASothuQQR1E5YaQFZWZw5IiH99ecfzqsU";
+    public static final String BENDRE_CHANNEL = "UCETOYQavA-i3f1mFbfRihbw";
 }

@@ -21,14 +21,24 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_post_details"/>
-
     <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
+        <!--android:id="@+id/fab_close"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--app:srcCompat="@android:drawable/ic_dialog_email"/>-->
+        <!--android:layout_gravity="start"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--android:backgroundTint="@color/black"-->
+        <!--app:srcCompat="@drawable/ic_close"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            layout="@layout/progressbar"/>
+    </RelativeLayout>
+
+    <include layout="@layout/content_post_details"/>
 
 </android.support.design.widget.CoordinatorLayout>

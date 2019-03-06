@@ -12,13 +12,13 @@
     <LinearLayout
         android:id="@+id/header_subscription"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_marginTop="10dp"
         android:background="@color/yellow"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -38,17 +38,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:text="pour accceder a l'ensemble des contenus"
+                android:text="pour acccéder a l'ensemble des contenus"
                 android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/header_btn_subscription"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:text="M'abonner"/>
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="90dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_right_arrow"
-            android:contentDescription="@string/description"/>
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_marginStart="90dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:src="@drawable/ic_right_arrow"-->
+        <!--android:contentDescription="@string/description"/>-->
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +70,7 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bienvenue!"
+            android:text="@string/lbl_welcome"
             android:textColor="@color/black"
             android:textStyle="bold"
             />

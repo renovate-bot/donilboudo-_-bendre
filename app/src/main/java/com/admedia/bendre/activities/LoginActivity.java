@@ -19,11 +19,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.admedia.bendre.R;
-import com.admedia.bendre.WordPressService;
+import com.admedia.bendre.api.WordPressService;
 import com.admedia.bendre.model.AppUser;
 import com.admedia.bendre.util.AuthenticationHelper;
 import com.admedia.bendre.util.CategoriesUtil;
@@ -31,14 +32,7 @@ import com.admedia.bendre.util.EndpointConstants;
 import com.admedia.bendre.util.MenuUtil;
 import com.admedia.bendre.util.MessageUtil;
 import com.admedia.bendre.util.NetworkUtil;
-import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,6 +63,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_login);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -136,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
     private void login(String username, String password) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(EndpointConstants.baseUrl)
+                .baseUrl(EndpointConstants.WP_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
@@ -157,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     String userDisplayName = (String) data.get("user_display_name");
 
                     //get user token and save in db
-                    AppUser user = new AppUser(token, userEmail, userNicename, userDisplayName);
+                    AppUser user = new AppUser(token, userEmail, userNicename, userDisplayName, password, "", "");
 
                     completeUserInfo(user);
                 }
@@ -182,37 +178,30 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         String header = "Bearer " + user.getToken();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(EndpointConstants.postsUrl)
+                .baseUrl(EndpointConstants.POSTS_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
         WordPressService apiService = retrofit.create(WordPressService.class);
-        Call<JsonObject> call = apiService.getMe(header);
-        call.enqueue(new Callback<JsonObject>() {
+        Call<LinkedTreeMap> call = apiService.getMe(header);
+        call.enqueue(new Callback<LinkedTreeMap>() {
             @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                try
+            public void onResponse(@NonNull Call<LinkedTreeMap> call, @NonNull Response<LinkedTreeMap> response) {
+                if (response.body() != null)
                 {
-                    String data = Objects.requireNonNull(response.errorBody()).string();
-                    JSONObject object = new JSONObject(data);
-                    int userId = object.getInt("id");
-                    user.setId(userId);
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
+                    LinkedTreeMap data = response.body();
+                    Double userId = (Double) data.get("id");
+                    if (userId != null)
+                    {
+                        user.setId(userId.intValue());
+                    }
                 }
 
                 AuthenticationHelper.getInstance().login(getApplicationContext(), user);
 
                 Intent intent;
                 if (postType != null && !postType.isEmpty())
-
                 {
                     intent = new Intent(getApplicationContext(), PostsActivity.class);
                     intent.putExtra(CategoriesUtil.POST_TYPE, postType);
@@ -222,13 +211,12 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     intent = new Intent(getApplicationContext(), MyMenuActivity.class);
                 }
 
-                startActivity(intent);
-
                 showProgress(false);
+                startActivity(intent);
             }
 
             @Override
-            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<LinkedTreeMap> call, @NonNull Throwable t) {
                 Log.i("onFail", t.getMessage());
                 showProgress(false);
                 MessageUtil.getInstance().ToastMessage(getApplicationContext(), "Impossible de se connecter, veuillez reessayer plus tard");
@@ -273,29 +261,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.login_activity2, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings)
-//        {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -321,5 +286,9 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void registration(View view) {
+        startActivity(new Intent(getApplicationContext(), RegistrationActivity.class));
     }
 }

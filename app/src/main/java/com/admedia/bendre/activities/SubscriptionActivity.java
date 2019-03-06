@@ -22,6 +22,8 @@ import com.admedia.bendre.util.MenuUtil;
 
 import java.util.Objects;
 
+import static com.admedia.bendre.activities.PostDetailsActivity.POST_TYPE;
+
 public class SubscriptionActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private TextView mTypeAbonnement;
     private TextInputEditText mNomUtilisateur;
@@ -90,7 +92,9 @@ public class SubscriptionActivity extends AppCompatActivity implements Navigatio
         }
         else
         {
-            super.onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
+            intent.putExtra(POST_TYPE, getString(R.string.menu_a_la_une));
+            startActivity(intent);
         }
     }
 
@@ -103,9 +107,9 @@ public class SubscriptionActivity extends AppCompatActivity implements Navigatio
         return true;
     }
 
-    public void cancel(View view) {
-        startActivity(new Intent(getApplicationContext(), MyMenuActivity.class));
-    }
+//    public void cancel(View view) {
+//        startActivity(new Intent(getApplicationContext(), MyMenuActivity.class));
+//    }
 
     public void submit(View view) {
         boolean cancel = false;
@@ -186,13 +190,13 @@ public class SubscriptionActivity extends AppCompatActivity implements Navigatio
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK)
-        {
-            onBackPressed();
-            //kill activity
-            finish();
-            return true;
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK)
+//        {
+//            onBackPressed();
+//            //kill activity
+//            finish();
+//            return true;
+//        }
         return super.onKeyDown(keyCode, event);
     }
 }

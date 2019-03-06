@@ -21,6 +21,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/progressbar"/>
+    </RelativeLayout>
+
+
     <include layout="@layout/content_new_post"/>
 
 </android.support.design.widget.CoordinatorLayout>

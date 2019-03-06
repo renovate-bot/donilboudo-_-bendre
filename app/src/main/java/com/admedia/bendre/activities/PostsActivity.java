@@ -2,6 +2,7 @@ package com.admedia.bendre.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -25,13 +26,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.admedia.bendre.R;
-import com.admedia.bendre.WordPressService;
+import com.admedia.bendre.api.WordPressService;
 import com.admedia.bendre.adapters.PostsViewAdapter;
 import com.admedia.bendre.model.AppUser;
 import com.admedia.bendre.model.Post;
 import com.admedia.bendre.util.AuthenticationHelper;
 import com.admedia.bendre.util.CachesUtil;
 import com.admedia.bendre.util.CategoriesUtil;
+import com.admedia.bendre.util.Constants;
 import com.admedia.bendre.util.EndpointConstants;
 import com.admedia.bendre.util.MenuUtil;
 import com.admedia.bendre.util.MessageUtil;
@@ -58,10 +60,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.admedia.bendre.activities.PostDetailsActivity.POST_TYPE;
 import static com.admedia.bendre.activities.PostDetailsActivity.SELECTED_POST;
 import static com.admedia.bendre.util.Constants.USE_CACHE_DATA;
+import static maes.tech.intentanim.CustomIntent.customType;
 
 public class PostsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String SHOW_ONLY_MY_POSTS = "SHOW_ONLY_MY_POSTS";
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvPosts;
     private ProgressBar mProgressBar;
@@ -73,11 +74,11 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
     private List<Post> posts;
     private int currentPageNumber;
     private boolean loadMore;
-    private boolean showMyPosts;
     private int totalNumberOfPages;
     private int totalNumberOfPosts;
     private AppUser loggedInUser;
     private boolean useCacheData;
+    private boolean doubleBackToExitPressedOnce = false;
 
     private Call<JsonArray> call;
 
@@ -93,7 +94,6 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
 
         currentPageNumber = 1;
         loadMore = false;
-        showMyPosts = getIntent().getBooleanExtra(SHOW_ONLY_MY_POSTS, false);
         mLogout = findViewById(R.id.logout_button);
 
         loggedInUser = AuthenticationHelper.getInstance().getConnectedUser(getApplicationContext());
@@ -115,7 +115,7 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
         postType = getIntent().getStringExtra(POST_TYPE);
         if (getSupportActionBar() != null)
         {
-            getSupportActionBar().setTitle(showMyPosts ? "Mes articles" : postType);
+            getSupportActionBar().setTitle(postType);
         }
         useCacheData = getIntent().getBooleanExtra(USE_CACHE_DATA, true);
 
@@ -126,22 +126,23 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(
                 () -> {
-                    currentPageNumber = 1;
-                    useCacheData = false;
-                    fetchPosts(1);
+                    if (NetworkUtil.isOnline(this))
+                    {
+                        currentPageNumber = 1;
+                        useCacheData = false;
+                        fetchPosts(1);
+                    }
+                    else
+                    {
+                        swipeRefreshLayout.setRefreshing(false);
+                        MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.no_internet_connexion));
+                    }
                 }
         );
     }
 
     private void fetchData() {
-        if (showMyPosts)
-        {
-            fetchMyPosts(true, 1);
-        }
-        else
-        {
-            fetchPosts(1);
-        }
+        fetchPosts(1);
     }
 
     private void fetchPosts(int pageNumber) {
@@ -212,129 +213,66 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
             swipeRefreshLayout.setRefreshing(false);
         }
 
-        try
+        if (posts != null)
         {
-            String key = "posts-" + postType;
-            CachesUtil.getInstance().removeCache(getApplicationContext(), key);
-            CachesUtil.getInstance().createCachedFileForPosts(getApplicationContext(), key, posts);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+            try
+            {
+                String key = "posts-" + postType;
+                CachesUtil.getInstance().removeCache(getApplicationContext(), key);
+                CachesUtil.getInstance().createCachedFileForPosts(getApplicationContext(), key, posts);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
 
-        rvPosts.setAdapter(new PostsViewAdapter(posts, post -> {
-            Intent intent = new Intent(getApplicationContext(), PostDetailsActivity.class);
-            intent.putExtra(SELECTED_POST, post);
-            startActivity(intent);
-        }));
+            rvPosts.setAdapter(new PostsViewAdapter(posts, getApplicationContext(), post -> {
+                Intent intent = new Intent(getApplicationContext(), PostDetailsActivity.class);
+                intent.putExtra(SELECTED_POST, post);
+                startActivity(intent);
+                customType(this, Constants.LEFT_TO_RIGHT);
+            }));
 
-        rvPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0)
-                {
-                    if (!recyclerView.canScrollVertically(RecyclerView.FOCUS_DOWN))
+            rvPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    if (dy > 0)
                     {
-                        if (currentPageNumber < totalNumberOfPages)
+                        if (!recyclerView.canScrollVertically(RecyclerView.FOCUS_DOWN))
                         {
-                            currentPageNumber++;
-                            loadMore = true;
-                            fetchPosts(currentPageNumber);
+                            if (currentPageNumber < totalNumberOfPages)
+                            {
+                                currentPageNumber++;
+                                loadMore = true;
+                                fetchPosts(currentPageNumber);
+                            }
                         }
                     }
                 }
+            });
+
+            if (posts.size() > 0)
+            {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                rvPosts.setLayoutManager(linearLayoutManager);
             }
-        });
+            else
+            {
+                rvPosts.setVisibility(View.GONE);
 
-        if (posts.size() > 0)
-        {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-            rvPosts.setLayoutManager(linearLayoutManager);
-        }
-        else
-        {
-            rvPosts.setVisibility(View.GONE);
+                ConstraintLayout layout = findViewById(R.id.posts_container);
 
-            ConstraintLayout layout = findViewById(R.id.posts_container);
-
-            TextView textView = new TextView(getApplicationContext());
-            textView.setText(getString(R.string.no_news));
-            textView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-            textView.setTextColor(getResources().getColor(R.color.black));
-            textView.setTextSize(20);
-            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-            RelativeLayout relativeLayout = new RelativeLayout(getApplicationContext());
-            relativeLayout.addView(textView);
-            layout.addView(relativeLayout);
-        }
-    }
-
-    private void fetchMyPosts(boolean useProgressDialog, int pageNumber) {
-        if (useProgressDialog)
-        {
-            mProgressBar = findViewById(R.id.progressbar);
-        }
-
-        String header = "";
-        AppUser user = AuthenticationHelper.getInstance().getConnectedUser(getApplicationContext());
-        if (user != null)
-        {
-            header = "Bearer " + user.getToken();
-        }
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(EndpointConstants.postsUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-
-        WordPressService apiService = retrofit.create(WordPressService.class);
-        assert user != null;
-        Call<JsonArray> call = apiService.getPostsByAuthor(header, true, "publish", pageNumber, user.getId());
-        call.enqueue(new Callback<JsonArray>() {
-            @Override
-            public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
-                if (response.body() != null)
-                {
-                    posts = new ArrayList<>();
-
-                    //get numbers of pages and posts
-                    totalNumberOfPages = Integer.parseInt(Objects.requireNonNull(response.headers().get("X-WP-TotalPages")));
-                    totalNumberOfPosts = Integer.parseInt(Objects.requireNonNull(response.headers().get("X-WP-Total")));
-
-                    JsonArray jsonElements = response.body();
-                    for (int counter = 0; counter < jsonElements.size(); counter++)
-                    {
-                        JsonElement element = jsonElements.get(counter);
-                        Post post = new Post((JsonObject) element);
-                        post.setPostType(postType);
-                        posts.add(post);
-                    }
-                    fillData(posts);
-                }
-                else
-                {
-                    fillData(new ArrayList<>());
-                }
+                TextView textView = new TextView(getApplicationContext());
+                textView.setText(getString(R.string.no_news));
+                textView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+                textView.setTextColor(getResources().getColor(R.color.black));
+                textView.setTextSize(20);
+                textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                RelativeLayout relativeLayout = new RelativeLayout(getApplicationContext());
+                relativeLayout.addView(textView);
+                layout.addView(relativeLayout);
             }
-
-            @Override
-            public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
-                showProgress(false);
-
-                if (t.getMessage().contains("Expired token") || t.getMessage().contains("jwt_auth_invalid_token"))
-                {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    //
-                    startActivity(intent);
-                }
-                else
-                {
-                    MessageUtil.getInstance().ToastMessage(getApplicationContext(), "Impossible de se connecter, veuillez reessayer plus tard");
-                }
-            }
-        });
+        }
     }
 
     private void showProgress(boolean show) {
@@ -371,7 +309,7 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
                 }
 
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(EndpointConstants.postsUrl)
+                        .baseUrl(EndpointConstants.POSTS_URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .build();
@@ -411,7 +349,7 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
                     @Override
                     public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
                         showProgress(false);
-                        MessageUtil.getInstance().ToastMessage(getApplicationContext(), "Impossible de se connecter, veuillez reessayer plus tard");
+                        MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.cannot_fetch_data));
                     }
                 });
 
@@ -445,18 +383,30 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
-        intent.putExtra(CategoriesUtil.POST_TYPE, getString(R.string.menu_a_la_une));
-        startActivity(intent);
+        if (!postType.equals(getString(R.string.menu_a_la_une)))
+        {
+            Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
+            intent.putExtra(POST_TYPE, getString(R.string.menu_a_la_une));
+            startActivity(intent);
+        }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK)
         {
-            finishAffinity();
-            System.exit(0);
-            return true;
+            if (doubleBackToExitPressedOnce)
+            {
+                finishAffinity();
+                System.exit(0);
+                return true;
+            }
+            if (postType.equals(getString(R.string.menu_a_la_une)))
+            {
+                this.doubleBackToExitPressedOnce = true;
+                MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.lbl_press_back_to_exit));
+                new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 5000);
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -518,7 +468,7 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
             OkHttpClient okHttpClient = new OkHttpClient.Builder().cache(cache).build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(EndpointConstants.postsUrl)
+                    .baseUrl(EndpointConstants.POSTS_URL)
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -558,11 +508,11 @@ public class PostsActivity extends AppCompatActivity implements NavigationView.O
 
                 @Override
                 public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
-                    showProgress(false);
                     if (!call.isCanceled())
                     {
                         MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.cannot_fetch_data));
                     }
+                    fillData(null);
                 }
             });
         }

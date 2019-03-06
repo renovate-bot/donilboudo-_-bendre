@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,24 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.MyPostsActivity"
+            android:label="@string/title_activity_my_articles"
+            android:parentActivityName=".activities.MyMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.admedia.bendre.activities.MyMenuActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.RegistrationActivity"
+            android:label="@string/title_activity_registration"
+            android:parentActivityName=".activities.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.admedia.bendre.activities.LoginActivity"/>
+        </activity>
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
@@ -43,11 +62,11 @@
         <activity
             android:name=".activities.MyProfileActivity"
             android:label="@string/title_activity_user_profile"
-            android:parentActivityName=".activities.UserMenuActivity"
+            android:parentActivityName=".activities.MyMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.admedia.bendre.activities.UserMenuActivity"/>
+                android:value="com.admedia.bendre.activities.MyMenuActivity"/>
         </activity>
         <activity
             android:name=".activities.LoginActivity"
@@ -139,8 +158,15 @@
         <activity
             android:name=".activities.NewPostActivity"
             android:label="@string/title_activity_new_post"
+            android:parentActivityName=".activities.MyMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.admedia.bendre.activities.MyMenuActivity"/>
         </activity>
+        <activity
+            android:name=".activities.YoutubePlayerActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 </manifest>

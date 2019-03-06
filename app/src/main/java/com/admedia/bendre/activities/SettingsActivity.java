@@ -1,5 +1,6 @@
 package com.admedia.bendre.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.admedia.bendre.R;
@@ -18,8 +18,10 @@ import com.admedia.bendre.database.DBManager;
 import com.admedia.bendre.util.MenuUtil;
 import com.onesignal.OneSignal;
 
-public class SettingsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import static com.admedia.bendre.activities.PostDetailsActivity.POST_TYPE;
+
+public class SettingsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +48,11 @@ public class SettingsActivity extends AppCompatActivity
 
         Switch mSwitchNotification = findViewById(R.id.switch_notification);
         mSwitchNotification.setChecked(true);
-        mSwitchNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked)
-                {
-                    OneSignal.setSubscription(false);
-                    //TODO save to db this preference
-                }
+        mSwitchNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked)
+            {
+                OneSignal.setSubscription(false);
+                //TODO save to db this preference
             }
         });
     }
@@ -67,7 +66,9 @@ public class SettingsActivity extends AppCompatActivity
         }
         else
         {
-            super.onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
+            intent.putExtra(POST_TYPE, getString(R.string.menu_a_la_une));
+            startActivity(intent);
         }
     }
 
@@ -82,12 +83,18 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK)
-        {
-            finishAffinity();
-            System.exit(0);
-            return true;
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK)
+//        {
+////            if (doubleBackToExitPressedOnce)
+////            {
+////                finishAffinity();
+////                System.exit(0);
+////                return true;
+////            }
+////            this.doubleBackToExitPressedOnce = true;
+////            MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.lbl_press_back_to_exit));
+////            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 5000);
+//        }
         return super.onKeyDown(keyCode, event);
     }
 }

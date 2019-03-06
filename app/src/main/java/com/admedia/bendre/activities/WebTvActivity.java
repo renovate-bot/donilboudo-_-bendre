@@ -1,5 +1,6 @@
 package com.admedia.bendre.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,14 +18,16 @@ import android.view.MenuItem;
 import com.admedia.bendre.R;
 import com.admedia.bendre.adapters.ViewPagerAdapter;
 import com.admedia.bendre.fragments.ChannelFragment;
-import com.admedia.bendre.fragments.VideoFragment;
+import com.admedia.bendre.fragments.ChannelVideosFragment;
 import com.admedia.bendre.model.Video;
 import com.admedia.bendre.util.MenuUtil;
+
+import static com.admedia.bendre.activities.PostDetailsActivity.POST_TYPE;
 
 public class WebTvActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         ChannelFragment.OnFragmentInteractionListener,
-        VideoFragment.OnListFragmentInteractionListener {
+        ChannelVideosFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +56,8 @@ public class WebTvActivity extends AppCompatActivity implements
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ChannelFragment(), "Chaine");
-        adapter.addFragment(new VideoFragment(), "Videos");
+//        adapter.addFragment(new ChannelFragment(), "Chaine");
+        adapter.addFragment(new ChannelVideosFragment(), "Videos");
         viewPager.setAdapter(adapter);
     }
 
@@ -67,7 +70,9 @@ public class WebTvActivity extends AppCompatActivity implements
         }
         else
         {
-            super.onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
+            intent.putExtra(POST_TYPE, getString(R.string.menu_a_la_une));
+            startActivity(intent);
         }
     }
 
@@ -92,12 +97,18 @@ public class WebTvActivity extends AppCompatActivity implements
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK)
-        {
-            finishAffinity();
-            System.exit(0);
-            return true;
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK)
+//        {
+////            if (doubleBackToExitPressedOnce)
+////            {
+////                finishAffinity();
+////                System.exit(0);
+////                return true;
+////            }
+////            this.doubleBackToExitPressedOnce = true;
+////            MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.lbl_press_back_to_exit));
+////            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 5000);
+//        }
         return super.onKeyDown(keyCode, event);
     }
 }

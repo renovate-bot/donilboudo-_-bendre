@@ -29,22 +29,31 @@ public class AppUser implements Serializable {
     @JsonProperty("user_display_name")
     private String userDisplayName;
     private boolean enableNotifications;
+    private String password;
+    private String firstName;
+    private String lastName;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
-    public AppUser(int id, String token, String userEmail, String userNicename, String userDisplayName) {
+    public AppUser(int id, String token, String userEmail, String userNicename, String userDisplayName, String password, String firstName, String lastName) {
         this.id = id;
         this.token = token;
         this.userEmail = userEmail;
         this.userDisplayName = userDisplayName;
         this.userNicename = userNicename;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public AppUser(String token, String userEmail, String userNicename, String userDisplayName) {
+    public AppUser(String token, String userEmail, String userNicename, String userDisplayName, String password, String firstName, String lastName) {
         this.token = token;
         this.userEmail = userEmail;
         this.userDisplayName = userDisplayName;
         this.userNicename = userNicename;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     @JsonProperty("token")
@@ -111,5 +120,29 @@ public class AppUser implements Serializable {
 
     public void setEnableNotifications(boolean enableNotifications) {
         this.enableNotifications = enableNotifications;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

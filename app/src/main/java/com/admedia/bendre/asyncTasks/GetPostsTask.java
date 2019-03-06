@@ -11,17 +11,18 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class GetPostsTask extends AsyncTask<String, Void, String> {
-    private String endpointUrl = EndpointConstants.postsUrl;
+    private String endpointUrl = EndpointConstants.POSTS_URL;
 
     public interface AsyncResponse {
         void processFinish(String output);
     }
 
-    private AsyncResponse delegate = null;
+    private AsyncResponse delegate;
 
     public GetPostsTask(AsyncResponse delegate) {
         this.delegate = delegate;
@@ -46,7 +47,7 @@ public class GetPostsTask extends AsyncTask<String, Void, String> {
             conn.setDoOutput(true);
 
             OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
             writer.write("");
 
             writer.flush();
@@ -60,7 +61,7 @@ public class GetPostsTask extends AsyncTask<String, Void, String> {
             {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-                StringBuilder sb = new StringBuilder("");
+                StringBuilder sb = new StringBuilder();
                 String line;
 
                 while ((line = in.readLine()) != null)
@@ -77,7 +78,7 @@ public class GetPostsTask extends AsyncTask<String, Void, String> {
         }
         catch (Exception e)
         {
-            String msg = e != null ? e.getMessage() : "";
+            String msg = e.getMessage();
             return "Exception: " + msg;
         }
     }

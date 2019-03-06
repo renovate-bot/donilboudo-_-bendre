@@ -1,11 +1,13 @@
 package com.admedia.bendre.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,10 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.admedia.bendre.R;
-import com.admedia.bendre.WordPressService;
+import com.admedia.bendre.api.WordPressService;
 import com.admedia.bendre.adapters.ProductsViewAdapter;
 import com.admedia.bendre.model.woocommerce.Product;
-import com.admedia.bendre.util.BasicAuthInterceptor;
 import com.admedia.bendre.util.CachesUtil;
 import com.admedia.bendre.util.EndpointConstants;
 import com.admedia.bendre.util.MenuUtil;
@@ -37,9 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +47,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.admedia.bendre.activities.PostDetailsActivity.POST_TYPE;
 import static com.admedia.bendre.util.Constants.USE_CACHE_DATA;
 
 public class KiosqueActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,16 +55,23 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
     private static final String wcPassword = "cs_38bcc73ed4aab303914ceafedb800b0d6be873b5";
 
     private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView rvProducts;
     private boolean useCacheData;
     private Call<JsonArray> call;
 
     private List<Product> products;
+    private boolean isLoading = false;
+    private ProductsViewAdapter productsViewAdapter;
+    private int totalPages;
+    private int currentPage = 1;
+    private boolean loadMore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+        initScrollListener();
         fetchData();
     }
 
@@ -92,6 +100,45 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
 
         rvProducts = findViewById(R.id.products);
         useCacheData = getIntent().getBooleanExtra(USE_CACHE_DATA, true);
+
+        mSwipeRefreshLayout = findViewById(R.id.products_swipe_container);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+        mSwipeRefreshLayout.canChildScrollUp();
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mSwipeRefreshLayout.setRefreshing(true);
+            useCacheData = !NetworkUtil.isOnline(this);
+            currentPage = 1;
+            fetchData();
+        });
+    }
+
+    private void initScrollListener() {
+        rvProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+                if (!isLoading)
+                {
+                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == products.size() - 1)
+                    {
+                        if (currentPage + 1 <= totalPages)
+                        {
+                            currentPage++;
+                            fetchData();
+                            isLoading = true;
+                            loadMore = true;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void fetchData() {
@@ -148,7 +195,10 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
         }
         else
         {
-            super.onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
+            intent.putExtra(POST_TYPE, getString(R.string.menu_a_la_une));
+            startActivity(intent);
+//            super.onBackPressed();
         }
     }
 
@@ -158,6 +208,10 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
             if (mProgressBar != null)
             {
                 mProgressBar.setVisibility(View.INVISIBLE);
+            }
+            if (mSwipeRefreshLayout != null)
+            {
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }
     }
@@ -174,6 +228,7 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
 
     private void fillData() {
         showProgress(false);
+        isLoading = false;
 
         if (products.size() > 0)
         {
@@ -186,19 +241,25 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
                 e.printStackTrace();
             }
 
-            rvProducts.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-            rvProducts.setAdapter(new ProductsViewAdapter(this, products, v -> {
-
-            }));
+            if (!loadMore)
+            {
+                rvProducts.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                productsViewAdapter = new ProductsViewAdapter(this, products);
+                rvProducts.setAdapter(productsViewAdapter);
+            }
+            else
+            {
+                productsViewAdapter.notifyItemRemoved(products.size());
+                productsViewAdapter.notifyDataSetChanged();
+            }
         }
         else
         {
             rvProducts.setVisibility(View.GONE);
-
             ConstraintLayout layout = findViewById(R.id.products_container);
 
             TextView textView = new TextView(getApplicationContext());
-            textView.setText(getString(R.string.no_news));
+            textView.setText(getString(R.string.no_news_bendrekan));
             textView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             textView.setTextColor(getResources().getColor(R.color.black));
             textView.setTextSize(20);
@@ -213,12 +274,6 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK)
-        {
-            finishAffinity();
-            System.exit(0);
-            return true;
-        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -246,30 +301,29 @@ public class KiosqueActivity extends AppCompatActivity implements NavigationView
 
         @Override
         public void run() {
-            OkHttpClient client = new OkHttpClient
-                    .Builder()
-                    .readTimeout(15, TimeUnit.SECONDS)
-                    .writeTimeout(15, TimeUnit.SECONDS)
-                    .connectTimeout(15, TimeUnit.SECONDS)
-                    .addInterceptor(new BasicAuthInterceptor(wcUsername, wcPassword))
-                    .build();
-
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(EndpointConstants.wcBaseUrl)
-                    .client(client)
+                    .baseUrl(EndpointConstants.WC_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
 
             WordPressService apiService = retrofit.create(WordPressService.class);
-            call = apiService.getProducts("date", "desc", 25);
+            call = apiService.getProducts(wcUsername, wcPassword, "date", "desc", currentPage);
             call.enqueue(new Callback<JsonArray>() {
                 @Override
                 public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
-                    products = new ArrayList<>();
+                    if (!isLoading)
+                    {
+                        products = new ArrayList<>();
+                    }
 
                     if (response.body() != null)
                     {
+                        if (response.headers().get("x-wp-totalpages") != null)
+                        {
+                            totalPages = Integer.parseInt(Objects.requireNonNull(response.headers().get("x-wp-totalpages")));
+                        }
+
                         JsonArray elements = response.body().getAsJsonArray();
                         for (int counter = 0; counter < elements.size(); counter++)
                         {

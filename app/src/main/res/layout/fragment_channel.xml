@@ -6,6 +6,9 @@
              tools:context=".fragments.ChannelFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <include layout="@layout/under_construction"/>
-
+    <!--<include layout="@layout/under_construction"/>-->
+    <RelativeLayout
+        android:id="@+id/youtube_player"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
 </FrameLayout>

@@ -19,7 +19,6 @@ import com.admedia.bendre.util.AuthenticationHelper;
 import com.admedia.bendre.util.MenuUtil;
 
 import static com.admedia.bendre.activities.PostDetailsActivity.POST_TYPE;
-import static com.admedia.bendre.activities.PostsActivity.SHOW_ONLY_MY_POSTS;
 
 public class UserMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private AppUser connectedUser;
@@ -124,7 +123,6 @@ public class UserMenuActivity extends AppCompatActivity implements NavigationVie
 
     public void myPosts(View view) {
         Intent intent = new Intent(getApplicationContext(), PostsActivity.class);
-        intent.putExtra(SHOW_ONLY_MY_POSTS, true);
         startActivity(intent);
     }
 

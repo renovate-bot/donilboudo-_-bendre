@@ -8,13 +8,17 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.admedia.bendre.R;
-import com.admedia.bendre.WordPressService;
+import com.admedia.bendre.api.WordPressService;
 import com.admedia.bendre.model.woocommerce.Billing;
 import com.admedia.bendre.model.woocommerce.Order;
 import com.admedia.bendre.model.woocommerce.OrderItem;
@@ -37,7 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.admedia.bendre.util.Constants.USE_CACHE_DATA;
 
-public class PaymentActivity extends AppCompatActivity {
+public class PaymentActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private TextInputLayout mLayoutFirstName;
     private TextInputLayout mLayoutLastName;
     private TextInputLayout mLayoutCountry;
@@ -57,6 +61,9 @@ public class PaymentActivity extends AppCompatActivity {
     private TextInputEditText mPostalCode;
     private TextInputEditText mPhone;
     private TextInputEditText mEmail;
+
+    private Spinner mPaymentOptions;
+    private TextView mSelectPaymentError;
 
     private ProgressBar mProgressBar;
 
@@ -110,6 +117,15 @@ public class PaymentActivity extends AppCompatActivity {
         mLayoutPhone = findViewById(R.id.layout_phone);
         mLayoutMail = findViewById(R.id.layout_mail);
 
+        mPaymentOptions = findViewById(R.id.payment_options);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.payment_options_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mPaymentOptions.setAdapter(adapter);
+        mPaymentOptions.setOnItemSelectedListener(this);
+        mSelectPaymentError = findViewById(R.id.select_payment_error);
+
         mProgressBar = findViewById(R.id.payment_progressbar);
 
         showProgress(false);
@@ -141,38 +157,19 @@ public class PaymentActivity extends AppCompatActivity {
             items.add(new OrderItem(selectedProduct.getId(), 1));
             order.setOrderItems(items);
 
-            order.setPaymentMethod("admedia_gateway");
-            order.setPaymentMethodTitle("Admedia OrangeMoney");
+            if (mPaymentOptions.getSelectedItem().equals("AdMedia OrangeMoney"))
+            {
+                order.setPaymentMethod("admedia_gateway");
+                order.setPaymentMethodTitle("Admedia OrangeMoney");
+            }
+            else
+            {
+                order.setPaymentMethod("paypal_express");
+                order.setPaymentMethodTitle("Paypal");
+            }
             order.setStatus("pending");
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(EndpointConstants.wcBaseUrl)
-                    .client(new OkHttpClient())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build();
-
-            WordPressService apiService = retrofit.create(WordPressService.class);
-            Call call = apiService.saveOrder(order);
-            call.enqueue(new Callback<Object>() {
-                @Override
-                public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
-                    if (response.body() != null)
-                    {
-                        showProgress(false);
-                        MessageUtil.getInstance().ToastMessage(getApplicationContext(), "Votre commande est en cours de traitement");
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
-                    showProgress(false);
-                    if (!call.isCanceled())
-                    {
-                        MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.cannot_fetch_data));
-                    }
-                }
-            });
+            new Thread(new SaveOrderRunnable(order)).start();
         }
     }
 
@@ -191,48 +188,102 @@ public class PaymentActivity extends AppCompatActivity {
 
         if (mFirstName.getText() == null || mFirstName.getText().toString().isEmpty())
         {
-            mLayoutFirstName.setError("Ce champs est obligatoire");
+            mLayoutFirstName.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutFirstName.setError(null);
+        }
+
         if (mLastName.getText() == null || mLastName.getText().toString().isEmpty())
         {
-            mLayoutLastName.setError("Ce champs est obligatoire");
+            mLayoutLastName.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutLastName.setError(null);
+        }
+
         if (mCountry.getText() == null || mCountry.getText().toString().isEmpty())
         {
-            mLayoutCountry.setError("Ce champs est obligatoire");
+            mLayoutCountry.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutCountry.setError(null);
+        }
+
         if (mAddress.getText() == null || mAddress.getText().toString().isEmpty())
         {
-            mLayoutAddress.setError("Ce champs est obligatoire");
+            mLayoutAddress.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutAddress.setError(null);
+        }
+
         if (mCity.getText() == null || mCity.getText().toString().isEmpty())
         {
-            mLayoutCity.setError("Ce champs est obligatoire");
+            mLayoutCity.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutCity.setError(null);
+        }
+
         if (mState.getText() == null || mState.getText().toString().isEmpty())
         {
-            mLayoutState.setError("Ce champs est obligatoire");
+            mLayoutState.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutState.setError(null);
+        }
+
         if (mPostalCode.getText() == null || mPostalCode.getText().toString().isEmpty())
         {
-            mLayoutPostalCode.setError("Ce champs est obligatoire");
+            mLayoutPostalCode.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutPostalCode.setError(null);
+        }
+
         if (mPhone.getText() == null || mPhone.getText().toString().isEmpty())
         {
-            mLayoutPhone.setError("Ce champs est obligatoire");
+            mLayoutPhone.setError(getString(R.string.requiered_field));
             isValid = false;
         }
+        else
+        {
+            mLayoutPhone.setError(null);
+        }
+
         if (mEmail.getText() == null || mEmail.getText().toString().isEmpty())
         {
-            mLayoutMail.setError("Ce champs est obligatoire");
+            mLayoutMail.setError(getString(R.string.requiered_field));
             isValid = false;
+        }
+        else
+        {
+            mLayoutMail.setError(null);
+        }
+
+        if (mPaymentOptions.getSelectedItem().equals("Sélectionner un mode de paiement"))
+        {
+            mSelectPaymentError.setVisibility(View.VISIBLE);
+            isValid = false;
+        }
+        else
+        {
+            mSelectPaymentError.setVisibility(View.INVISIBLE);
         }
 
         return isValid;
@@ -262,4 +313,58 @@ public class PaymentActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        parent.getItemAtPosition(pos);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    class SaveOrderRunnable implements Runnable {
+        private Order order;
+
+        SaveOrderRunnable(Order order) {
+            this.order = order;
+        }
+
+        @Override
+        public void run() {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(EndpointConstants.WC_BASE_URL)
+                    .client(new OkHttpClient())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build();
+
+            WordPressService apiService = retrofit.create(WordPressService.class);
+            Call call = apiService.saveOrder(order);
+            call.enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                    if (response.body() != null)
+                    {
+                        showProgress(false);
+                        MessageUtil.getInstance().ToastMessage(getApplicationContext(), "Votre commande est en cours de traitement");
+                    }
+                    else
+                    {
+                        Log.d("", "");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                    showProgress(false);
+                    if (!call.isCanceled())
+                    {
+                        MessageUtil.getInstance().ToastMessage(getApplicationContext(), getString(R.string.cannot_fetch_data));
+                    }
+                }
+            });
+        }
+    }
 }

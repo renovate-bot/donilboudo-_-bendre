@@ -17,6 +17,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String EMAIL = "user_email";
     static final String NICE_NAME = "nicename";
     static final String DISPLAY_NAME = "display_name";
+    static final String PASSWORD = "password";
+    static final String FIRST_NAME = "first_name";
+    static final String LAST_NAME = "last_name";
 
     //USER PREFERENCES columns
     static final String ENABLE_NOTIFICATION = "enable_notification";
@@ -35,7 +38,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TOKEN + " TEXT NOT NULL, "
             + EMAIL + " TEXT, "
             + NICE_NAME + " TEXT, "
-            + DISPLAY_NAME + " TEXT"
+            + DISPLAY_NAME + " TEXT, "
+            + PASSWORD + " TEXT, "
+            + FIRST_NAME + " TEXT, "
+            + LAST_NAME + " TEXT "
             + ")";
 
     // Creating user table query

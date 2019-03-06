@@ -12,7 +12,6 @@ import com.admedia.bendre.model.AppUser;
 import com.admedia.bendre.model.UserPreferences;
 
 public class DBManager {
-
     private DatabaseHelper dbHelper;
 
     private Context context;
@@ -82,6 +81,8 @@ public class DBManager {
             contentValue.put(DatabaseHelper.EMAIL, user.getUserEmail());
             contentValue.put(DatabaseHelper.NICE_NAME, user.getUserNicename());
             contentValue.put(DatabaseHelper.DISPLAY_NAME, user.getUserDisplayName());
+            contentValue.put(DatabaseHelper.PASSWORD, user.getPassword());
+            contentValue.put(DatabaseHelper.PASSWORD, user.getPassword());
 
             database.insert(DatabaseHelper.APP_USER_TABLE_NAME, null, contentValue);
         }
@@ -132,8 +133,11 @@ public class DBManager {
                         String email = cursor.getString(cursor.getColumnIndex(DatabaseHelper.EMAIL));
                         String niceName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.NICE_NAME));
                         String displayName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DISPLAY_NAME));
+                        String password = cursor.getString(cursor.getColumnIndex(DatabaseHelper.PASSWORD));
+                        String firstName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.FIRST_NAME));
+                        String lastName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.LAST_NAME));
 
-                        user = new AppUser(token, email, niceName, displayName);
+                        user = new AppUser(token, email, niceName, displayName, password, firstName, lastName);
 
                         cursor.moveToNext();
                     }
@@ -153,6 +157,15 @@ public class DBManager {
         contentValues.put(DatabaseHelper.TOKEN, token);
         return database.update(DatabaseHelper.APP_USER_TABLE_NAME, contentValues, DatabaseHelper._ID + " = " + _id, null);
     }
+
+    public void updateUserInfo(AppUser user) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.FIRST_NAME, user.getFirstName());
+        contentValues.put(DatabaseHelper.LAST_NAME, user.getLastName());
+        contentValues.put(DatabaseHelper.PASSWORD, user.getPassword());
+        database.update(DatabaseHelper.APP_USER_TABLE_NAME, contentValues, DatabaseHelper._ID + " = " + user.getId(), null);
+    }
+
 
     public void deleteUser(long _id) {
         database.delete(DatabaseHelper.APP_USER_TABLE_NAME, DatabaseHelper._ID + "=?", new String[]{"6"});
